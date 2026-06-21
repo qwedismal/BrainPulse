@@ -1,14 +1,24 @@
 // === TAB SWITCHING ===
-document.querySelectorAll('.auth-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const which = tab.dataset.tab;
-    const loginPane = document.getElementById('loginPane');
-    const registerPane = document.getElementById('registerPane');
-    if (loginPane) loginPane.style.display = which === 'login' ? 'block' : 'none';
-    if (registerPane) registerPane.style.display = which === 'register' ? 'block' : 'none';
+function switchTab(tabName) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-tab').forEach(t => {
+    if (t.dataset.tab === tabName) t.classList.add('active');
   });
+  
+  const loginPane = document.getElementById('loginPane');
+  const registerPane = document.getElementById('registerPane');
+  
+  if (tabName === 'login') {
+    if (loginPane) loginPane.style.display = 'block';
+    if (registerPane) registerPane.style.display = 'none';
+  } else {
+    if (loginPane) loginPane.style.display = 'none';
+    if (registerPane) registerPane.style.display = 'block';
+  }
+}
+
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => switchTab(tab.dataset.tab));
 });
 
 // === LOGIN ===
@@ -18,9 +28,11 @@ if (loginForm) {
     e.preventDefault();
     const fd = new FormData(e.target);
     const err = document.getElementById('loginError');
-    err.textContent = '';
+    if (err) err.textContent = '';
     
     const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.textContent : 'Войти →';
+    
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Входим...';
@@ -29,11 +41,11 @@ if (loginForm) {
     try {
       await API.login(fd.get('email'), fd.get('password'));
       window.location.href = 'trainer.html';
-    } catch (e) {
-      err.textContent = '❌ ' + (e.message || 'Ошибка входа');
+    } catch (error) {
+      if (err) err.textContent = '❌ ' + (error.message || 'Ошибка входа');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Войти →';
+        submitBtn.textContent = originalText;
       }
     }
   });
@@ -46,9 +58,11 @@ if (registerForm) {
     e.preventDefault();
     const fd = new FormData(e.target);
     const err = document.getElementById('registerError');
-    err.textContent = '';
+    if (err) err.textContent = '';
     
     const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.textContent : 'Зарегистрироваться ⚡';
+    
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.textContent = 'Создаём аккаунт...';
@@ -57,23 +71,27 @@ if (registerForm) {
     try {
       await API.register(fd.get('name'), fd.get('email'), fd.get('password'));
       window.location.href = 'trainer.html';
-    } catch (e) {
-      err.textContent = '❌ ' + (e.message || 'Ошибка регистрации');
+    } catch (error) {
+      if (err) err.textContent = '❌ ' + (error.message || 'Ошибка регистрации');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Зарегистрироваться ⚡';
+        submitBtn.textContent = originalText;
       }
     }
   });
 }
 
 // === IF ALREADY LOGGED IN — REDIRECT ===
-const existingUser = Utils.loadUser();
-if (existingUser) {
-  window.location.href = 'trainer.html';
+try {
+  const existingUser = Utils.loadUser();
+  if (existingUser) {
+    window.location.href = 'trainer.html';
+  }
+} catch (e) {
+  console.error('Auth check failed:', e);
 }
 
-// === CURSOR (only desktop) ===
+// === CURSOR (только desktop) ===
 if (!window.matchMedia('(hover: none)').matches) {
-  Utils.cursor();
+  try { Utils.cursor(); } catch (e) {}
 }
