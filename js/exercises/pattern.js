@@ -3,15 +3,10 @@ Snd.enabled = data.settings.sound !== false;
 const $ = id => document.getElementById(id);
 
 const STATE = {
-  timer: 300,
-  running: false,
-  iv: null,
-  sequence: [],      // текущая показанная последовательность
-  userSequence: [],  // ввод пользователя
-  level: 1,
-  maxLevel: 1,
-  phase: 'idle',     // idle | showing | input | failed
-  busy: false        // блокировка ввода во время показа
+  timer: 300, running: false, iv: null,
+  sequence: [], userSequence: [],
+  level: 1, maxLevel: 1,
+  busy: false
 };
 
 document.getElementById('record').textContent = data.records.pattern || 0;
@@ -26,23 +21,20 @@ function renderBoard() {
   });
 }
 
-function lightCell(c, duration = 400) {
-  return new Promise(resolve => {
-    const cell = document.querySelector(`.pat-cell.c${c}`);
-    if (!cell) return resolve();
-    cell.classList.add('lit');
-    Snd.beep(300 + c * 100, 0.25);
-    setTimeout(() => {
-      cell.classList.remove('lit');
-      resolve();
-    }, duration);
-  });
+async function lightCell(c, duration = 400) {
+  const cell = document.querySelector(`.pat-cell.c${c}`);
+  if (!cell) return;
+  cell.classList.add('lit');
+  Snd.beep(300 + c * 100, 0.3);
+  await new Promise(r => setTimeout(() => {
+    cell.classList.remove('lit');
+    r();
+  }, duration));
 }
 
 async function showSequence() {
   STATE.busy = true;
   STATE.userSequence = [];
-  // Добавляем один новый элемент к последовательности
   STATE.sequence.push(Utils.rand(1, 4));
   
   document.getElementById('patMsg').textContent = 'Смотри и запоминай...';
@@ -56,37 +48,29 @@ async function showSequence() {
   }
   
   STATE.busy = false;
-  STATE.phase = 'input';
   document.getElementById('patMsg').textContent = `Твоя очередь (${STATE.sequence.length} кликов)`;
 }
 
 function onCellClick(c) {
-  if (!STATE.running) return;
-  if (STATE.busy) return;
-  if (STATE.phase !== 'input') return;
+  if (!STATE.running || STATE.busy) return;
   
-  // Визуальная обратная связь
   lightCell(c, 200);
   STATE.userSequence.push(c);
   
   const idx = STATE.userSequence.length - 1;
   
-  // Проверка текущего клика
   if (STATE.userSequence[idx] !== STATE.sequence[idx]) {
-    // Ошибка
     failRound();
     return;
   }
   
-  // Проверка завершения
   if (STATE.userSequence.length === STATE.sequence.length) {
-    // Уровень пройден
-    STATE.phase = 'idle';
+    STATE.busy = true;
     if (STATE.level > STATE.maxLevel) {
       STATE.maxLevel = STATE.level;
       document.getElementById('score').textContent = STATE.maxLevel;
     }
-    document.getElementById('patMsg').textContent = 'Верно! Усложняем...';
+    document.getElementById('patMsg').textContent = 'Верно! Следующий уровень...';
     Snd.ok();
     Utils.flash('green');
     STATE.level++;
@@ -97,22 +81,10 @@ function onCellClick(c) {
 }
 
 function failRound() {
-  STATE.phase = 'failed';
   STATE.busy = true;
   Snd.err();
   Utils.flash('red');
-  
-  // Подсветить правильный ответ для обучения
-  const wrongIdx = STATE.userSequence.length - 1;
-  const correctCell = document.querySelector(`.pat-cell.c${STATE.sequence[wrongIdx]}`);
-  if (correctCell) {
-    correctCell.style.outline = '4px solid #00CC66';
-    correctCell.style.outlineOffset = '-4px';
-    setTimeout(() => { correctCell.style.outline = ''; }, 1200);
-  }
-  
-  document.getElementById('patMsg').textContent = `Ошибка на уровне ${STATE.level}`;
-  document.getElementById('score').textContent = STATE.maxLevel;
+  document.getElementById('patMsg').textContent = `Ошибка на уровне ${STATE.level}!`;
   
   setTimeout(() => {
     STATE.level = 1;
@@ -127,8 +99,8 @@ function failRound() {
 function start() {
   if (STATE.running) return;
   Object.assign(STATE, {
-    timer: 300, level: 1, maxLevel: 1, sequence: [], userSequence: [],
-    phase: 'idle', busy: false, running: true
+    timer: 300, running: true, sequence: [], userSequence: [],
+    level: 1, maxLevel: 1, busy: false
   });
   document.getElementById('startBtn').disabled = true;
   document.getElementById('stopBtn').disabled = false;
@@ -149,7 +121,6 @@ function start() {
 function finish() {
   STATE.running = false;
   STATE.busy = true;
-  STATE.phase = 'idle';
   clearInterval(STATE.iv);
   Snd.end();
   
@@ -157,10 +128,7 @@ function finish() {
   if (window.API && API.token) API.saveResult('pattern', STATE.maxLevel).catch(()=>{});
   
   document.getElementById('resScore').textContent = STATE.maxLevel;
-  const rating = STATE.maxLevel > 10 ? '⚡ Гений паттернов' :
-                 STATE.maxLevel > 6 ? '🎯 Отличная память' :
-                 STATE.maxLevel > 3 ? '🧠 Тренируется' : '🌱 Начинающий';
-  document.getElementById('resVs').innerHTML = `${rating}. Ты запомнил цепочку из <strong>${STATE.maxLevel}</strong> элементов`;
+  document.getElementById('resVs').innerHTML = `Запомнил цепочку из <strong>${STATE.maxLevel}</strong> элементов`;
   document.getElementById('resultModal').classList.add('show');
   document.getElementById('record').textContent = Store.load().records.pattern;
   document.getElementById('startBtn').disabled = false;
@@ -174,6 +142,6 @@ document.getElementById('againBtn').addEventListener('click', () => {
   start();
 });
 
-// Инициализация
 renderBoard();
+document.getElementById('problem-area').insertAdjacentHTML('afterend', '');
 Utils.cursor();

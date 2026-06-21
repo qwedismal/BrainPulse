@@ -2,35 +2,26 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Зеркало — BrainPulse</title>
 <link rel="stylesheet" href="../css/exercise.css">
-<link rel="stylesheet" href="../css/mirror.css">
 <style>body{--ec:#FF1493}</style>
 </head>
 <body>
-<nav class="nav">
-  <div class="container nav-inner">
-    <a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
-    <a href="../trainer.html" class="nav-cta">← В кабинет</a>
-  </div>
-</nav>
+<nav class="nav"><div class="container nav-inner"><a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a><a href="../trainer.html" class="nav-cta">← В кабинет</a></div></nav>
 <div class="container exercise-shell">
   <div class="ex-topbar">
-    <div class="ex-title"><span class="pill">🪞 Зеркало</span><h1>Межполушарная связь</h1></div>
+    <div class="ex-title"><span class="pill" style="background:#FF1493">🪞 Зеркало</span><h1>Межполушарная связь</h1></div>
     <div class="ex-stats">
       <div class="st timer"><span class="lbl">⏱ Время</span><span class="val" id="time">5:00</span></div>
       <div class="st"><span class="lbl">Рекорд</span><span class="val" id="record">0</span></div>
       <div class="st"><span class="lbl">Сейчас</span><span class="val" id="score">0</span></div>
-      <div class="st"><span class="lbl">Уровень</span><span class="val" id="lvl">1</span></div>
     </div>
   </div>
-  <div class="play-area" id="play">
-    <div id="problem-area" style="width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column"></div>
-  </div>
+  <div class="play-area"><div id="problem-area" style="width:100%;display:flex;justify-content:center;align-items:center;flex-direction:column"></div></div>
   <div class="controls">
     <button class="ctrl-btn primary" id="startBtn">▶ Старт</button>
-    <button class="ctrl-btn danger" id="stopBtn" disabled■ Стоп</button>
+    <button class="ctrl-btn danger" id="stopBtn" disabled>■ Стоп</button>
   </div>
 </div>
 <div class="result-modal" id="resultModal">

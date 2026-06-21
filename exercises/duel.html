@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Дуэль — BrainPulse</title>
+<link rel="stylesheet" href="../css/exercise.css">
+<style>
+body{--ec:var(--c-acc)}
+.duel-stage{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:20px;
+  align-items:center;max-width:760px;margin:0 auto;width:100%;
+}
+.duel-fighter{
+  text-align:center;padding:20px;
+  background:var(--bg-elev-2);border:1px solid var(--border);
+  border-radius:var(--r-md);
+}
+.duel-fighter.you{border-color:var(--c-acc);box-shadow:0 0 30px rgba(255,107,0,0.2)}
+.duel-fighter.bot{border-color:var(--c-exp);box-shadow:0 0 30px rgba(0,136,255,0.2)}
+.duel-avatar{font-size:64px;margin-bottom:12px}
+.duel-name{font-family:var(--font-head);font-weight:800;font-size:18px;margin-bottom:8px}
+.duel-score{font-family:var(--font-mono);font-size:36px;font-weight:900}
+.duel-fighter.you .duel-score{color:var(--c-acc)}
+.duel-fighter.bot .duel-score{color:var(--c-exp)}
+.duel-vs{font-family:var(--font-head);font-size:48px;font-weight:900;color:var(--text-muted)}
+.duel-problem{
+  margin-top:24px;padding:24px;background:var(--bg-elev-2);
+  border:1px solid var(--border);border-radius:var(--r-md);
+}
+.duel-problem-text{
+  font-family:var(--font-head);font-size:clamp(36px,8vw,64px);
+  font-weight:900;margin-bottom:16px;
+}
+.duel-choices{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:8px;
+  max-width:420px;margin:0 auto;
+}
+.duel-choice{
+  padding:16px;background:var(--bg-base);border:1px solid var(--border);
+  border-radius:var(--r-sm);font-family:var(--font-mono);font-size:20px;
+  font-weight:700;cursor:pointer;transition:all .15s;
+}
+.duel-choice:hover{border-color:var(--c-acc);transform:translateY(-2px)}
+.duel-status{
+  text-align:center;margin-top:16px;font-family:var(--font-mono);
+  font-size:13px;color:var(--text-muted);
+}
+.duel-status .timer-val{color:var(--c-acc);font-weight:700}
+.duel-round-info{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:16px;font-family:var(--font-mono);font-size:13px;color:var(--text-muted);
+}
+@media(max-width:640px){
+  .duel-stage{grid-template-columns:1fr;gap:12px}
+  .duel-vs{font-size:32px}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
+    <a href="../trainer.html" class="nav-cta">← В кабинет</a>
+  </div>
+</nav>
+
+<div class="container exercise-shell">
+  <div class="ex-topbar">
+    <div class="ex-title">
+      <span class="pill">⚔️ Дуэль</span>
+      <h1>1-на-1 с ботом</h1>
+    </div>
+    <div class="ex-stats">
+      <div class="st"><span class="lbl">⏱ Время</span><span class="val" id="time">5:00</span></div>
+      <div class="st"><span class="lbl">Рекорд</span><span class="val" id="record">0</span></div>
+      <div class="st"><span class="lbl">Раунд</span><span class="val" id="round">1</span></div>
+    </div>
+  </div>
+  <div class="play-area" id="play">
+    <div id="problem-area" style="width:100%"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn primary" id="startBtn">⚔️ В БОЙ</button>
+    <button class="ctrl-btn" id="difficultyBtn">Сложность: Легко</button>
+    <button class="ctrl-btn danger" id="stopBtn" disabled>■ Сдаться</button>
+  </div>
+</div>
+
+<div class="result-modal" id="resultModal">
+  <div class="result-box">
+    <div class="result-score" id="resScore">0:0</div>
+    <div class="result-label" id="resLabel">результат дуэли</div>
+    <div class="result-vs" id="resVs"></div>
+    <div class="result-actions">
+      <button class="btn btn-primary" id="againBtn">⚔️ Реванш</button>
+      <a href="../trainer.html" class="btn btn-ghost">В кабинет</a>
+    </div>
+  </div>
+</div>
+
+<script src="../js/utils.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/sound.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/exercises/duel.js"></script>
+</body>
+</html>

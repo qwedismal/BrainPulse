@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  .t-card { padding: 24px 20px; }
+  .t-quote { font-size: 14px; }
+  .t-avatar { width: 36px; height: 36px; font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+  .t-card { padding: 20px 16px; }
+  .t-quote { font-size: 13px; line-height: 1.5; }
+}

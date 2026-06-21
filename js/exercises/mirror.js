@@ -1,24 +1,13 @@
 const data = Store.load();
 Snd.enabled = data.settings.sound !== false;
 const $ = id => document.getElementById(id);
-
-const STATE = {
-  timer: 300, running: false, iv: null,
-  score: 0, level: 1,
-  targetX: 50, targetY: 50, // % позиция
-  hoverX: 50, hoverY: 50
-};
-
+const STATE = { timer: 300, running: false, iv: null, score: 0, targetX: 50, targetY: 50, hoverX: 50, hoverY: 50 };
 document.getElementById('record').textContent = data.records.mirror || 0;
 
-function getMirrorCoord(x, y) {
-  // Зеркальное отражение по горизонтали
-  return { x: 100 - x, y };
-}
+function getMirror(x, y) { return { x: 100 - x, y }; }
 
 function render() {
-  const area = document.getElementById('problem-area');
-  area.innerHTML = `
+  document.getElementById('problem-area').innerHTML = `
     <div class="mirror-board">
       <div class="mirror-side" id="leftSide">
         <h4>ОРИГИНАЛ</h4>
@@ -30,27 +19,31 @@ function render() {
         <div class="mirror-coord-display" id="rightCoord">x: 50 y: 50</div>
       </div>
     </div>
-    <div class="mirror-hint">Удерживай палец/курсор в ЗЕРКАЛЬНОЙ позиции от мишени</div>`;
-  
-  // Стартовая позиция
+    <div class="mirror-hint">Двигай курсор/палец в зеркальной позиции</div>`;
   setNewTarget();
   
-  // Отслеживание на правой стороне
   const rightSide = document.getElementById('rightSide');
-  rightSide.addEventListener('mousemove', e => handleMove(e, rightSide));
+  rightSide.addEventListener('mousemove', e => {
+    const rect = rightSide.getBoundingClientRect();
+    STATE.hoverX = ((e.clientX - rect.left) / rect.width) * 100;
+    STATE.hoverY = ((e.clientY - rect.top) / rect.height) * 100;
+    document.getElementById('rightCoord').textContent = `x: ${Math.round(STATE.hoverX)} y: ${Math.round(STATE.hoverY)}`;
+    const mirror = getMirror(STATE.targetX, STATE.targetY);
+    if (Math.hypot(STATE.hoverX - mirror.x, STATE.hoverY - mirror.y) < 8) confirm();
+  });
   rightSide.addEventListener('touchmove', e => {
     e.preventDefault();
     const t = e.touches[0];
-    handleMove(t, rightSide);
+    const rect = rightSide.getBoundingClientRect();
+    STATE.hoverX = ((t.clientX - rect.left) / rect.width) * 100;
+    STATE.hoverY = ((t.clientY - rect.top) / rect.height) * 100;
   }, { passive: false });
   
-  // Мобильная версия: тапы по левой стороне для подтверждения
-  const leftSide = document.getElementById('leftSide');
-  leftSide.addEventListener('click', () => confirmPosition());
+  // Для мобильных — тап по левой стороне
+  document.getElementById('leftSide').addEventListener('click', confirm);
 }
 
 function setNewTarget() {
-  // Случайная позиция оригинала
   STATE.targetX = Utils.rand(15, 85);
   STATE.targetY = Utils.rand(15, 85);
   const target = document.getElementById('targetEl');
@@ -59,60 +52,28 @@ function setNewTarget() {
     target.style.top = `calc(${STATE.targetY}% - 25px)`;
   }
   document.getElementById('leftCoord').textContent = `x: ${STATE.targetX} y: ${STATE.targetY}`;
-  
-  // Зеркальная позиция
-  const mirror = getMirrorCoord(STATE.targetX, STATE.targetY);
+  const mirror = getMirror(STATE.targetX, STATE.targetY);
   document.getElementById('rightCoord').textContent = `ищи: x: ${mirror.x} y: ${mirror.y}`;
 }
 
-function handleMove(e, el) {
+function confirm() {
   if (!STATE.running) return;
-  const rect = el.getBoundingClientRect();
-  STATE.hoverX = ((e.clientX - rect.left) / rect.width) * 100;
-  STATE.hoverY = ((e.clientY - rect.top) / rect.height) * 100;
-  document.getElementById('rightCoord').textContent = `x: ${Math.round(STATE.hoverX)} y: ${Math.round(STATE.hoverY)}`;
-  
-  // Автопроверка если очень близко
-  const mirror = getMirrorCoord(STATE.targetX, STATE.targetY);
+  const mirror = getMirror(STATE.targetX, STATE.targetY);
   const dist = Math.hypot(STATE.hoverX - mirror.x, STATE.hoverY - mirror.y);
-  if (dist < 8) {
-    confirmPosition();
-  }
-}
-
-function confirmPosition() {
-  if (!STATE.running) return;
-  const mirror = getMirrorCoord(STATE.targetX, STATE.targetY);
-  const dist = Math.hypot(STATE.hoverX - mirror.x, STATE.hoverY - mirror.y);
-  
   if (dist < 15) {
-    score();
-  } else {
-    Snd.err();
-    Utils.flash('red');
+    STATE.score++;
+    Snd.ok();
+    Utils.flash('green');
+    document.getElementById('score').textContent = STATE.score;
+    setNewTarget();
   }
-}
-
-function score() {
-  STATE.score++;
-  Snd.ok();
-  Utils.flash('green');
-  document.getElementById('score').textContent = STATE.score;
-  // Повышение уровня
-  if (STATE.score > 0 && STATE.score % 5 === 0) {
-    STATE.level++;
-    document.getElementById('lvl').textContent = STATE.level;
-  }
-  setNewTarget();
 }
 
 function start() {
   if (STATE.running) return;
-  Object.assign(STATE, { timer: 300, running: true, score: 0, level: 1 });
+  Object.assign(STATE, { timer: 300, running: true, score: 0 });
   document.getElementById('startBtn').disabled = true;
   document.getElementById('stopBtn').disabled = false;
-  document.getElementById('score').textContent = '0';
-  document.getElementById('lvl').textContent = '1';
   Snd.start();
   render();
   STATE.iv = setInterval(() => {
@@ -130,7 +91,7 @@ function finish() {
   Store.recordResult('mirror', STATE.score);
   if (window.API && API.token) API.saveResult('mirror', STATE.score).catch(()=>{});
   document.getElementById('resScore').textContent = STATE.score;
-  document.getElementById('resVs').innerHTML = `Ты прошёл <strong>${STATE.score}</strong> точек. Это уровень <strong>${STATE.score > 30 ? 'зеркального мастера' : STATE.score > 15 ? 'следопыта' : 'ученика'}</strong>`;
+  document.getElementById('resVs').innerHTML = `Прошёл <strong>${STATE.score}</strong> точек`;
   document.getElementById('resultModal').classList.add('show');
   document.getElementById('record').textContent = Store.load().records.mirror;
   document.getElementById('startBtn').disabled = false;

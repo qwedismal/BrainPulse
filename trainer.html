@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
 <title>Тренажёр — BrainPulse</title>
 <link rel="stylesheet" href="css/trainer.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -18,7 +19,7 @@
       <a href="#ach">Достижения</a>
       <a href="leaderboard.html">Лидерборд</a>
     </div>
-    <a href="#" id="logoutBtn" class="nav-cta">Выйти</a>
+    <a href="auth.html" class="nav-cta" id="navAuthBtn">Войти</a>
   </div>
 </nav>
 
@@ -26,7 +27,7 @@
   <div class="trainer-head">
     <div class="trainer-greet">
       <div class="streak" id="streak">🔥 День 0 подряд</div>
-      <h1 id="greetText">Добро пожаловать, чемпион</h1>
+      <h1>Добро пожаловать</h1>
     </div>
     <div class="level-card">
       <div class="label">Уровень мозга</div>
@@ -36,7 +37,6 @@
     </div>
   </div>
 
-  <!-- БОСС ДНЯ (выделен) -->
   <a href="exercises/boss.html" class="boss-banner reveal" id="bossBanner">
     <div class="boss-banner-content">
       <span class="boss-banner-emoji" id="bossEmoji">⚔️</span>
@@ -50,49 +50,111 @@
   </a>
 
   <div id="modes">
-    <h2 style="font-size:32px;margin-bottom:24px">Выбери кнопку</h2>
+    <h2 style="font-size:clamp(20px,3vw,32px);margin-bottom:20px">Выбери кнопку</h2>
     <div class="modes-grid">
       <a href="exercises/accelerator.html" class="mode-btn" style="--mc:var(--c-acc)">
-        <div class="m-icon">⚡</div><h3>УСКОРИТЕЛЬ</h3><p>Скорость мышления</p>
-        <div class="m-stat">Рекорд: <strong id="r-acc">0</strong></div>
+        <span class="m-icon">⚡</span>
+        <div class="mode-btn-content">
+          <h3>УСКОРИТЕЛЬ</h3><p>Скорость мышления</p>
+          <div class="m-stat">Рекорд: <strong id="r-acc">0</strong></div>
+        </div>
       </a>
       <a href="exercises/expander.html" class="mode-btn" style="--mc:var(--c-exp)">
-        <div class="m-icon">🧠</div><h3>РАСШИРИТЕЛЬ</h3><p>Рабочая память</p>
-        <div class="m-stat">Рекорд: <strong id="r-exp">0</strong></div>
+        <span class="m-icon">🧠</span>
+        <div class="mode-btn-content">
+          <h3>РАСШИРИТЕЛЬ</h3><p>Рабочая память</p>
+          <div class="m-stat">Рекорд: <strong id="r-exp">0</strong></div>
+        </div>
       </a>
       <a href="exercises/focus.html" class="mode-btn" style="--mc:var(--c-foc)">
-        <div class="m-icon">🎯</div><h3>ФОКУС</h3><p>Концентрация</p>
-        <div class="m-stat">Рекорд: <strong id="r-foc">0</strong> сек</div>
+        <span class="m-icon">🎯</span>
+        <div class="mode-btn-content">
+          <h3>ФОКУС</h3><p>Концентрация</p>
+          <div class="m-stat">Рекорд: <strong id="r-foc">0</strong> сек</div>
+        </div>
       </a>
       <a href="exercises/grip.html" class="mode-btn" style="--mc:var(--c-grp)">
-        <div class="m-icon">🔒</div><h3>ЦЕПКОСТЬ</h3><p>Долговременная память</p>
-        <div class="m-stat">Рекорд: <strong id="r-grp">0</strong>%</div>
+        <span class="m-icon">🔒</span>
+        <div class="mode-btn-content">
+          <h3>ЦЕПКОСТЬ</h3><p>Долговременная память</p>
+          <div class="m-stat">Рекорд: <strong id="r-grp">0</strong>%</div>
+        </div>
       </a>
       <a href="exercises/reaction.html" class="mode-btn" style="--mc:var(--c-rxn)">
-        <div class="m-icon">💥</div><h3>РЕАКЦИЯ</h3><p>Скорость реакции</p>
-        <div class="m-stat">Рекорд: <strong id="r-rxn">0</strong> мс</div>
+        <span class="m-icon">💥</span>
+        <div class="mode-btn-content">
+          <h3>РЕАКЦИЯ</h3><p>Скорость реакции</p>
+          <div class="m-stat">Рекорд: <strong id="r-rxn">0</strong> мс</div>
+        </div>
       </a>
       <a href="exercises/pattern.html" class="mode-btn" style="--mc:var(--c-pat)">
-        <div class="m-icon">🧬</div><h3>ПАТТЕРН</h3><p>Распознавание паттернов</p>
-        <div class="m-stat">Рекорд: <strong id="r-pat">0</strong> ур.</div>
+        <span class="m-icon">🧬</span>
+        <div class="mode-btn-content">
+          <h3>ПАТТЕРН</h3><p>Распознавание паттернов</p>
+          <div class="m-stat">Рекорд: <strong id="r-pat">0</strong></div>
+        </div>
       </a>
       <a href="exercises/mirror.html" class="mode-btn" style="--mc:#FF1493">
-        <div class="m-icon">🪞</div><h3>ЗЕРКАЛО</h3><p>Межполушарная связь</p>
-        <div class="m-stat">Рекорд: <strong id="r-mir">0</strong></div>
+        <span class="m-icon">🪞</span>
+        <div class="mode-btn-content">
+          <h3>ЗЕРКАЛО</h3><p>Межполушарная связь</p>
+          <div class="m-stat">Рекорд: <strong id="r-mir">0</strong></div>
+        </div>
       </a>
       <a href="exercises/dual.html" class="mode-btn" style="--mc:#00CED1">
-        <div class="m-icon">🎯</div><h3>ДВОЙНАЯ ЗАДАЧА</h3><p>Деление внимания</p>
-        <div class="m-stat">Рекорд: <strong id="r-dual">0</strong></div>
+        <span class="m-icon">🎯</span>
+        <div class="mode-btn-content">
+          <h3>ДВОЙНАЯ</h3><p>Деление внимания</p>
+          <div class="m-stat">Рекорд: <strong id="r-dual">0</strong></div>
+        </div>
       </a>
       <a href="exercises/nback.html" class="mode-btn" style="--mc:#9370DB">
-        <div class="m-icon">🧠</div><h3>N-BACK</h3><p>Золотой стандарт</p>
-        <div class="m-stat">Рекорд: <strong id="r-nbk">0</strong>%</div>
+        <span class="m-icon">🧠</span>
+        <div class="mode-btn-content">
+          <h3>N-BACK</h3><p>Рабочая память ++</p>
+          <div class="m-stat">Рекорд: <strong id="r-nbk">0</strong>%</div>
+        </div>
       </a>
       <a href="exercises/sort.html" class="mode-btn" style="--mc:#32CD32">
-        <div class="m-icon">📦</div><h3>СОРТИРОВКА</h3><p>Быстрая категоризация</p>
-        <div class="m-stat">Рекорд: <strong id="r-srt">0</strong></div>
+        <span class="m-icon">📦</span>
+        <div class="mode-btn-content">
+          <h3>СОРТИРОВКА</h3><p>Категоризация</p>
+          <div class="m-stat">Рекорд: <strong id="r-srt">0</strong></div>
+        </div>
+      </a>
+      <a href="exercises/chess.html" class="mode-btn" style="--mc:#e6e6e6">
+        <span class="m-icon">♟️</span>
+        <div class="mode-btn-content">
+          <h3>ШАХМАТЫ</h3><p>Тактические задачи</p>
+          <div class="m-stat">Рекорд: <strong id="r-ches">0</strong></div>
+        </div>
+      </a>
+      <a href="exercises/duel.html" class="mode-btn" style="--mc:linear-gradient(135deg,#FF6B00,#0088FF)">
+        <span class="m-icon">⚔️</span>
+        <div class="mode-btn-content">
+          <h3>ДУЭЛЬ</h3><p>1-на-1 с ботом</p>
+          <div class="m-stat">Рекорд: <strong id="r-duel">0</strong></div>
+        </div>
       </a>
     </div>
+  </div>
+
+  <div class="brainmap-card" id="brainmap-section">
+    <h2>🧠 Карта твоего мозга</h2>
+    <p class="sub">Радар навыков — видно, что прокачано, а что нужно подтянуть</p>
+    <canvas id="brainmap" width="500" height="400"></canvas>
+  </div>
+
+  <div class="tree-card">
+    <h2>🌳 Дерево нейронов</h2>
+    <p class="sub">Каждая тренировка — новая связь в твоей нейронной сети</p>
+    <canvas id="neuraltree" width="800" height="400"></canvas>
+  </div>
+
+  <div class="forecast-card">
+    <h2>📈 Прогноз прогресса</h2>
+    <p class="sub">AI предсказывает, где ты будешь через 30 дней</p>
+    <div id="forecastContent" class="forecast-result">Загрузка прогноза...</div>
   </div>
 
   <div class="chart-card" id="progress">
@@ -107,11 +169,11 @@
         <button data-ex="pattern">Паттерн</button>
       </div>
     </div>
-    <canvas id="chart" width="1200" height="280"></canvas>
+    <canvas id="chart" width="1200" height="240"></canvas>
   </div>
 
   <div id="ach">
-    <h2 style="font-size:32px;margin-bottom:24px">🏆 Достижения</h2>
+    <h2 style="font-size:clamp(20px,3vw,32px);margin-bottom:20px">🏆 Достижения</h2>
     <div class="achievements-grid" id="achGrid"></div>
   </div>
 </div>
@@ -125,6 +187,9 @@
 <script src="js/utils.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/api.js"></script>
+<script src="js/features/braimap.js"></script>
+<script src="js/features/neural-tree.js"></script>
+<script src="js/features/forecast.js"></script>
 <script src="js/trainer.js"></script>
 </body>
 </html>

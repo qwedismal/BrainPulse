@@ -2,34 +2,25 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Фокус — BrainPulse</title>
 <link rel="stylesheet" href="../css/exercise.css">
 <style>body{--ec:var(--c-foc)}</style>
 </head>
 <body>
-<nav class="nav">
-  <div class="container nav-inner">
-    <a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
-    <a href="../trainer.html" class="nav-cta">← В кабинет</a>
-  </div>
-</nav>
+<nav class="nav"><div class="container nav-inner"><a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a><a href="../trainer.html" class="nav-cta">← В кабинет</a></div></nav>
 <div class="container exercise-shell">
   <div class="ex-topbar">
     <div class="ex-title"><span class="pill">🎯 Фокус</span><h1>Концентрация</h1></div>
     <div class="ex-stats">
       <div class="st timer"><span class="lbl">⏱ Время</span><span class="val" id="time">0.0</span></div>
       <div class="st"><span class="lbl">Рекорд</span><span class="val" id="record">0</span></div>
-      <div class="st"><span class="lbl">Сейчас</span><span class="val" id="score">—</span></div>
     </div>
   </div>
-  <div class="play-area" id="play">
-    <div id="problem-area" style="width:100%"></div>
-  </div>
+  <div class="play-area"><div id="problem-area" style="width:100%"></div></div>
   <div class="controls">
-    <button class="ctrl-btn primary" id="startBtn">▶ Старт 5x5</button>
-    <button class="ctrl-btn" id="modeBtn">7x7 / Двухцвет</button>
-    <button class="ctrl-btn danger" id="stopBtn" disabled■ Стоп</button>
+    <button class="ctrl-btn primary" id="startBtn">▶ Старт 5×5</button>
+    <button class="ctrl-btn danger" id="stopBtn" disabled>■ Стоп</button>
   </div>
 </div>
 <div class="result-modal" id="resultModal">
@@ -46,8 +37,7 @@
 <script src="../js/utils.js"></script>
 <script src="../js/storage.js"></script>
 <script src="../js/sound.js"></script>
-<script src="../js/exercises/focus.js"></script>
 <script src="../js/api.js"></script>
-
+<script src="../js/exercises/focus.js"></script>
 </body>
 </html>

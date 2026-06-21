@@ -1,6 +1,5 @@
-Utils.cursor();
+if (!window.matchMedia('(hover: none)').matches) Utils.cursor();
 
-// Tab switching
 document.querySelectorAll('.auth-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -11,41 +10,31 @@ document.querySelectorAll('.auth-tab').forEach(tab => {
   });
 });
 
-// Login
 document.getElementById('loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const err = document.getElementById('loginError');
   err.textContent = '';
-  
   try {
-    const result = await API.login(fd.get('email'), fd.get('password'));
-    localStorage.setItem('bp_user_id', result.user.id);
-    localStorage.setItem('bp_token', result.token);
+    await API.login(fd.get('email'), fd.get('password'));
     window.location.href = 'trainer.html';
   } catch (e) {
-    err.textContent = '❌ ' + (e.message || 'Неверный email или пароль');
+    err.textContent = '❌ ' + (e.message || 'Ошибка входа');
   }
 });
 
-// Register
 document.getElementById('registerForm').addEventListener('submit', async e => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const err = document.getElementById('registerError');
   err.textContent = '';
-  
   try {
-    const result = await API.register(fd.get('name'), fd.get('email'), fd.get('password'));
-    localStorage.setItem('bp_user_id', result.user.id);
-    localStorage.setItem('bp_token', result.token);
+    await API.register(fd.get('name'), fd.get('email'), fd.get('password'));
     window.location.href = 'trainer.html';
   } catch (e) {
     err.textContent = '❌ ' + (e.message || 'Ошибка регистрации');
   }
 });
 
-// Если уже залогинен — редирект
-API.getUser().then(user => {
-  if (user) window.location.href = 'trainer.html';
-});
+const user = Utils.loadUser();
+if (user) window.location.href = 'trainer.html';

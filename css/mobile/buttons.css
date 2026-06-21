@@ -1,0 +1,18 @@
+@media (max-width: 768px) {
+  .btn {
+    padding: 16px 24px;
+    font-size: 14px;
+    width: 100%;
+    justify-content: center;
+  }
+  .nav-cta {
+    width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    padding: 14px 20px;
+    font-size: 13px;
+  }
+}

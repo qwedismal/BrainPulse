@@ -1,27 +1,27 @@
-:root{
-  --bg-base:#0a0a0f;
-  --bg-elev-1:#12121a;
-  --bg-elev-2:#1a1a26;
-  --bg-glass:rgba(18,18,26,0.6);
-  --border:rgba(255,255,255,0.08);
-  --border-hover:rgba(255,255,255,0.16);
-  --text-primary:#f5f5f7;
-  --text-secondary:#9a9aa8;
-  --text-muted:#5a5a6a;
-  --accent:#ffffff;
-  --grid:rgba(255,255,255,0.04);
-  /* Buttons */
-  --c-acc:#FF6B00;
-  --c-exp:#0088FF;
-  --c-foc:#00CC66;
-  --c-grp:#9B59B6;
-  --c-rxn:#FF3366;
-  --c-pat:#FFD700;
-  /* Fonts */
-  --font-head:'Montserrat',system-ui,sans-serif;
-  --font-body:'Inter',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono','Fira Mono',monospace;
-  /* Sizes */
-  --r-sm:8px;--r-md:14px;--r-lg:22px;--r-xl:32px;
-  --container:1280px;
+:root {
+  --bg-base: #0a0a0f;
+  --bg-elev-1: #12121a;
+  --bg-elev-2: #1a1a26;
+  --bg-glass: rgba(18,18,26,0.6);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.16);
+  --text-primary: #f5f5f7;
+  --text-secondary: #9a9aa8;
+  --text-muted: #5a5a6a;
+  --accent: #ffffff;
+  --grid: rgba(255,255,255,0.04);
+  --c-acc: #FF6B00;
+  --c-exp: #0088FF;
+  --c-foc: #00CC66;
+  --c-grp: #9B59B6;
+  --c-rxn: #FF3366;
+  --c-pat: #FFD700;
+  --font-head: 'Montserrat', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Mono', monospace;
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+  --container: 1280px;
 }

@@ -2,18 +2,13 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Паттерн — BrainPulse</title>
 <link rel="stylesheet" href="../css/exercise.css">
 <style>body{--ec:var(--c-pat)}</style>
 </head>
 <body>
-<nav class="nav">
-  <div class="container nav-inner">
-    <a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
-    <a href="../trainer.html" class="nav-cta">← В кабинет</a>
-  </div>
-</nav>
+<nav class="nav"><div class="container nav-inner"><a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a><a href="../trainer.html" class="nav-cta">← В кабинет</a></div></nav>
 <div class="container exercise-shell">
   <div class="ex-topbar">
     <div class="ex-title"><span class="pill">🧬 Паттерн</span><h1>Распознавание паттернов</h1></div>
@@ -23,13 +18,13 @@
       <div class="st"><span class="lbl">Сейчас</span><span class="val" id="score">0</span></div>
     </div>
   </div>
-  <div class="play-area" id="play">
+  <div class="play-area">
     <div id="problem-area" style="width:100%"></div>
     <div class="pat-status">Уровень: <span class="lvl" id="patLvl">1</span> · <span id="patMsg">Нажми СТАРТ</span></div>
   </div>
   <div class="controls">
     <button class="ctrl-btn primary" id="startBtn">▶ Старт</button>
-    <button class="ctrl-btn danger" id="stopBtn" disabled■ Стоп</button>
+    <button class="ctrl-btn danger" id="stopBtn" disabled>■ Стоп</button>
   </div>
 </div>
 <div class="result-modal" id="resultModal">
