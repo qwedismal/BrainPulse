@@ -1,15 +1,11 @@
-/* === PREVENT HORIZONTAL SCROLL === */
-html, body {
-  overflow-x: hidden;
-  max-width: 100%;
-}
+/* === FONTS === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
 
 /* === RESET === */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  /* КРИТИЧНО для мобильных */
   -webkit-tap-highlight-color: transparent;
 }
 html {
@@ -22,44 +18,38 @@ body {
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-family: var(--font-body);
-  background: var(--bg-base);
+  background-color: #0a0a0f;
   color: var(--text-primary);
   overflow-x: hidden;
   font-size: 16px;
 }
-
 img, picture, svg, video {
   display: block;
   max-width: 100%;
   height: auto;
 }
-
 input, button, textarea, select {
   font: inherit;
   color: inherit;
   background: none;
   border: none;
   outline: none;
-  /* Prevent zoom on iOS */
   font-size: 16px;
 }
-
 button {
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-
 a {
   color: inherit;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
-
 ul, ol { list-style: none; }
-
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-head);
   font-weight: 800;
@@ -68,22 +58,46 @@ h1, h2, h3, h4, h5, h6 {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-
+p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
 ::selection {
   background: var(--c-acc);
   color: #000;
 }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
 ::-webkit-scrollbar-thumb {
   background: #2a2a35;
   border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--c-acc); }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-acc);
+}
 
-/* Container */
+/* === BACKGROUND === */
+body {
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(255,107,0,0.08), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(0,136,255,0.08), transparent 40%),
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  background-attachment: fixed;
+}
+@media (max-width: 768px) {
+  body {
+    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+  }
+}
+
+/* === CONTAINER === */
 .container {
   max-width: var(--container);
   margin: 0 auto;
@@ -97,14 +111,16 @@ h1, h2, h3, h4, h5, h6 {
 /* === NAV === */
 .nav {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   padding: 16px 0;
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   background: rgba(10,10,15,0.75);
   border-bottom: 1px solid var(--border);
-  transition: padding .3s, background .3s;
+  transition: padding .3s ease, background .3s ease;
 }
 .nav.scrolled {
   padding: 10px 0;
@@ -126,9 +142,11 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
   z-index: 101;
   flex-shrink: 0;
+  color: var(--text-primary);
 }
 .logo-dot {
-  width: 10px; height: 10px;
+  width: 10px;
+  height: 10px;
   background: var(--accent);
   border-radius: 50%;
   box-shadow: 0 0 20px var(--accent);
@@ -155,8 +173,10 @@ h1, h2, h3, h4, h5, h6 {
 .nav-links a::after {
   content: '';
   position: absolute;
-  bottom: -4px; left: 0;
-  width: 0; height: 1px;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
   background: var(--c-acc);
   transition: width .3s;
 }
@@ -193,11 +213,13 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 100px;
   font-weight: 700;
   font-size: 14px;
-  transition: transform .25s, box-shadow .25s;
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
   position: relative;
   overflow: hidden;
   white-space: nowrap;
   cursor: pointer;
+  border: none;
+  text-decoration: none;
 }
 .btn-primary {
   background: var(--text-primary);
@@ -265,54 +287,40 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
   color: var(--text-muted);
   font-size: 12px;
-  padding-left: 16px;
-  padding-right: 16px;
 }
 .footer p { margin: 6px 0; }
 
-/* === CUSTOM CURSOR (только desktop) === */
+/* === CUSTOM CURSOR === */
 .cursor, .cursor-follower {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 9999;
   will-change: transform;
 }
 .cursor {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   background: var(--accent);
   border-radius: 50%;
   mix-blend-mode: difference;
-  transition: transform .15s;
+  transition: transform .15s ease;
 }
 .cursor-follower {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border: 1px solid rgba(255,255,255,0.4);
   border-radius: 50%;
-  transition: transform .3s, width .3s, height .3s, border-color .3s;
+  transition: transform .3s ease, width .3s, height .3s, border-color .3s;
 }
-.cursor.hover { transform: scale(2.5); }
+.cursor.hover { transform: translate(-50%, -50%) scale(2.5); }
 .cursor-follower.hover {
-  width: 60px; height: 60px;
+  width: 60px;
+  height: 60px;
   border-color: var(--accent);
 }
 @media (hover: none) {
   .cursor, .cursor-follower { display: none; }
   body { cursor: auto; }
-}
-
-/* === BACKGROUND === */
-body {
-  background-image:
-    radial-gradient(circle at 15% 10%, rgba(255,107,0,0.08), transparent 40%),
-    radial-gradient(circle at 85% 90%, rgba(0,136,255,0.08), transparent 40%),
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
-  background-attachment: fixed;
-}
-@media (max-width: 768px) {
-  body {
-    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32*
- }
 }

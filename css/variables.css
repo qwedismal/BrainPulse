@@ -16,8 +16,8 @@
   --c-grp: #9B59B6;
   --c-rxn: #FF3366;
   --c-pat: #FFD700;
-  --font-head: 'Montserrat', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-head: 'Montserrat', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Mono', monospace;
   --r-sm: 8px;
   --r-md: 14px;
