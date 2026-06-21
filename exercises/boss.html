@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Босс дня — BrainPulse</title>
+<link rel="stylesheet" href="../css/exercise.css">
+<style>
+body{--ec:#FF0040;--c-rxn:#FF0040}
+.boss-layout{display:grid;grid-template-columns:200px 1fr 200px;gap:24px;max-width:900px;margin:0 auto;align-items:center}
+@media(max-width:768px){.boss-layout{grid-template-columns:1fr}}
+.boss-hp-bar{height:24px;background:rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--border)}
+.boss-hp-fill{height:100%;background:linear-gradient(90deg, #FF0040, #ff5577);transition:width .3s;box-shadow:0 0 20px rgba(255,0,64,0.5)}
+.boss-hp-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:13px;font-weight:700}
+.boss-sprite{font-size:140px;filter:drop-shadow(0 0 40px var(--ec));animation:bossPulse 2s ease-in-out infinite;text-align:center}
+@keyframes bossPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.boss-hit{animation:bossShake .3s ease}
+@keyframes bossShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.boss-stage{text-align:center}
+.boss-stage h2{font-size:clamp(28px,4vw,42px);margin-bottom:8px}
+.boss-stage p{color:var(--text-muted);font-family:var(--font-mono);font-size:13px;margin-bottom:24px}
+.boss-problem{font-family:var(--font-head);font-size:clamp(50px,8vw,90px);font-weight:900;margin:30px 0;letter-spacing:-0.02em}
+.boss-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:420px;margin:0 auto}
+.boss-choice{padding:24px;background:var(--bg-elev-2);border:2px solid var(--border);border-radius:var(--r-md);font-family:var(--font-head);font-size:28px;font-weight:800;transition:all .15s}
+.boss-choice:hover{border-color:var(--ec);transform:translateY(-2px)}
+.boss-stats{display:flex;justify-content:space-around;font-family:var(--font-mono);font-size:13px;color:var(--text-muted);margin-top:30px}
+.boss-stats strong{color:var(--text-primary);display:block;font-size:24px;font-family:var(--font-head)}
+.boss-reward{background:linear-gradient(135deg,#FFD700,#FF6B00);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--font-head);font-size:42px;font-weight:900;margin:20px 0}
+.boss-intro{text-align:center;padding:30px}
+.boss-intro .vs{font-family:var(--font-head);font-size:60px;font-weight:900;margin:20px 0}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="../index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
+    <a href="../trainer.html" class="nav-cta">← В кабинет</a>
+  </div>
+</nav>
+<div class="container exercise-shell">
+  <div class="ex-topbar">
+    <div class="ex-title"><span class="pill" style="background:linear-gradient(135deg,#FF0040,#FF6B00)">⚔️ БОСС ДНЯ</span><h1>Ежедневный вызов</h1></div>
+    <div class="ex-stats">
+      <div class="st timer"><span class="lbl">⏱ Время</span><span class="val" id="time">1:00</span></div>
+      <div class="st"><span class="lbl">HP</span><span class="val" id="hp">100</span></div>
+    </div>
+  </div>
+  <div class="play-area" id="play">
+    <div id="problem-area" style="width:100%"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn primary" id="startBtn">⚔️ В БОЙ!</button>
+  </div>
+</div>
+<div class="result-modal" id="resultModal">
+  <div class="result-box">
+    <div class="boss-reward" id="resReward">+0 XP</div>
+    <div class="result-label" id="resLabel">Босс повержен</div>
+    <div class="result-vs" id="resVs"></div>
+    <div class="result-actions">
+      <button class="btn btn-primary" id="againBtn">⚔️ Завтра новый</button>
+      <a href="../trainer.html" class="btn btn-ghost">В кабинет</a>
+    </div>
+  </div>
+</div>
+<script src="../js/utils.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/sound.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/exercises/boss.js"></script>
+</body>
+</html>

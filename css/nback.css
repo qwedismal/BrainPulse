@@ -1,0 +1,22 @@
+.nback-board{display:flex;flex-direction:column;align-items:center;gap:30px}
+.nback-stimulus{
+  width:min(280px,70vmin);height:min(280px,70vmin);
+  background:radial-gradient(circle at 30% 30%, var(--bg-elev-2), var(--bg-base));
+  border:2px solid var(--border);border-radius:var(--r-lg);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:120px;font-weight:900;color:var(--text-primary);
+  position:relative;overflow:hidden;transition:transform .15s
+}
+.nback-stimulus.flash{animation:stimFlash .5s ease}
+@keyframes stimFlash{0%{transform:scale(1)}50%{transform:scale(1.05);box-shadow:0 0 60px var(--ec)}100%{transform:scale(1)}}
+.nback-cta{
+  padding:24px 60px;background:var(--ec);color:#fff;
+  border-radius:100px;font-family:var(--font-head);font-size:20px;font-weight:800;
+  letter-spacing:0.1em;text-transform:uppercase;transition:transform .15s
+}
+.nback-cta:hover{transform:scale(1.05)}
+.nback-cta:active{transform:scale(0.95)}
+.nback-cta.disabled{background:var(--bg-elev-2);color:var(--text-muted);cursor:not-allowed}
+.nback-progress{width:100%;max-width:400px;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.nback-progress-fill{height:100%;background:var(--ec);border-radius:3px;transition:width .3s}
+.nback-hint{color:var(--text-muted);font-size:13px;font-family:var(--font-mono);text-align:center}

@@ -1,0 +1,23 @@
+.sort-board{position:relative;width:min(540px,90vmin);aspect-ratio:1/1;margin:0 auto}
+.sort-target{
+  position:absolute;width:90px;height:90px;border-radius:50%;
+  background:rgba(255,255,255,0.04);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:36px;font-weight:900;color:var(--text-primary);
+  transition:all .2s;cursor:pointer
+}
+.sort-target:hover{background:rgba(255,255,255,0.08);border-color:var(--border-hover)}
+.sort-target.highlight{background:var(--ec);color:#000;border-color:var(--ec);transform:scale(1.1);box-shadow:0 0 30px var(--ec)}
+.sort-zone-label{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.15em;white-space:nowrap}
+.sort-target.zone-1{top:5%;left:50%;transform:translateX(-50%)}
+.sort-target.zone-2{top:50%;right:5%;transform:translateY(-50%)}
+.sort-target.zone-3{bottom:5%;left:50%;transform:translateX(-50%)}
+.sort-target.zone-4{top:50%;left:5%;transform:translateY(-50%)}
+.sort-item{
+  position:absolute;width:60px;height:60px;border-radius:14px;
+  background:linear-gradient(135deg, var(--bg-elev-2), var(--bg-elev-1));
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:28px;cursor:grab;transition:transform .15s;user-select:none;touch-action:none
+}
+.sort-item:active{cursor:grabbing;transform:scale(1.1)}
+.sort-hint{margin-top:20px;color:var(--text-muted);font-family:var(--font-mono);font-size:13px;text-align:center}

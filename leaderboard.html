@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Лидерборд — BrainPulse</title>
+<link rel="stylesheet" href="css/landing.css">
+<style>
+.lb-shell{padding:140px 0 80px;min-height:100vh}
+.lb-head{text-align:center;margin-bottom:60px}
+.lb-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.lb-tab{padding:12px 24px;background:var(--bg-elev-1);border:1px solid var(--border);border-radius:100px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s}
+.lb-tab:hover{border-color:var(--border-hover)}
+.lb-tab.active{background:var(--text-primary);color:#000;border-color:var(--text-primary)}
+.lb-list{display:flex;flex-direction:column;gap:8px;max-width:800px;margin:0 auto}
+.lb-row{display:grid;grid-template-columns:60px 1fr auto auto;gap:20px;align-items:center;padding:20px 24px;background:var(--bg-elev-1);border:1px solid var(--border);border-radius:var(--r-md);transition:all .3s}
+.lb-row:hover{transform:translateX(8px);border-color:var(--border-hover)}
+.lb-row.me{background:linear-gradient(135deg,rgba(255,107,0,0.1),rgba(0,136,255,0.1));border-color:var(--c-acc)}
+.lb-row.top-1{background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,107,0,0.1));border-color:#FFD700}
+.lb-row.top-2{background:linear-gradient(135deg,rgba(192,192,192,0.15),rgba(160,160,160,0.05));border-color:#C0C0C0}
+.lb-row.top-3{background:linear-gradient(135deg,rgba(205,127,50,0.15),rgba(139,69,19,0.05));border-color:#CD7F32}
+.lb-rank{font-family:var(--font-head);font-size:24px;font-weight:900;text-align:center}
+.lb-rank.medal{font-size:32px}
+.lb-user{display:flex;align-items:center;gap:14px}
+.lb-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--c-acc),var(--c-exp));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:18px}
+.lb-username{font-weight:700;font-size:16px}
+.lb-meta{font-size:12px;color:var(--text-muted);font-family:var(--font-mono)}
+.lb-score{font-family:var(--font-head);font-size:28px;font-weight:900;color:var(--c-acc)}
+.lb-ex{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--font-mono)}
+.lb-loading,.lb-empty{text-align:center;padding:80px 20px;color:var(--text-muted);font-family:var(--font-mono)}
+.lb-stats-card{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:800px;margin:0 auto 40px;padding:0 20px}
+.lb-stat-card{padding:24px;background:var(--bg-elev-1);border:1px solid var(--border);border-radius:var(--r-md);text-align:center}
+.lb-stat-card h4{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:12px;font-family:var(--font-mono);font-weight:500}
+.lb-stat-card .val{font-family:var(--font-head);font-size:36px;font-weight:900;color:var(--c-acc)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
+    <div class="nav-links">
+      <a href="trainer.html">Кабинет</a>
+      <a href="auth.html">Войти</a>
+    </div>
+    <a href="auth.html" class="nav-cta" id="authBtn">Войти →</a>
+  </div>
+</nav>
+
+<div class="container lb-shell">
+  <div class="lb-head reveal">
+    <div class="section-tag">// ЛИДЕРБОРД</div>
+    <h1 style="font-size:clamp(40px,6vw,80px);margin-bottom:16px">Топ игроков</h1>
+    <p style="color:var(--text-secondary);font-size:18px">Лучшие мозги планеты. А ты где?</p>
+  </div>
+
+  <div class="lb-tabs" id="lbTabs">
+    <button class="lb-tab active" data-ex="total">🏆 Общий</button>
+    <button class="lb-tab" data-ex="accelerator">⚡ Ускоритель</button>
+    <button class="lb-tab" data-ex="expander">🧠 Расширитель</button>
+    <button class="lb-tab" data-ex="focus">🎯 Фокус</button>
+    <button class="lb-tab" data-ex="grip">🔒 Цепкость</button>
+    <button class="lb-tab" data-ex="reaction">💥 Реакция</button>
+    <button class="lb-tab" data-ex="pattern">🧬 Паттерн</button>
+    <button class="lb-tab" data-ex="mirror">🪞 Зеркало</button>
+    <button class="lb-tab" data-ex="dual">🎯 Двойная</button>
+    <button class="lb-tab" data-ex="nback">N-Back</button>
+    <button class="lb-tab" data-ex="sort">📦 Сортировка</button>
+  </div>
+
+  <div class="lb-stats-card" id="myStats"></div>
+  <div class="lb-list" id="lbList">
+    <div class="lb-loading">Загрузка лидерборда...</div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>Лидерборд обновляется каждые 60 секунд. Играй чаще — поднимайся выше.</p>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/leaderboard.js"></script>
+</body>
+</html>

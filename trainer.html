@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тренажёр — BrainPulse</title>
+<link rel="stylesheet" href="css/trainer.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
+    <div class="nav-links">
+      <a href="#modes">Упражнения</a>
+      <a href="#progress">Прогресс</a>
+      <a href="#ach">Достижения</a>
+      <a href="leaderboard.html">Лидерборд</a>
+    </div>
+    <a href="#" id="logoutBtn" class="nav-cta">Выйти</a>
+  </div>
+</nav>
+
+<div class="container trainer-shell">
+  <div class="trainer-head">
+    <div class="trainer-greet">
+      <div class="streak" id="streak">🔥 День 0 подряд</div>
+      <h1 id="greetText">Добро пожаловать, чемпион</h1>
+    </div>
+    <div class="level-card">
+      <div class="label">Уровень мозга</div>
+      <div class="lvl" id="lvlName">Загрузка…</div>
+      <div class="level-bar"><div class="level-fill" id="levelFill" style="width:0%"></div></div>
+      <div class="pct" id="lvlPct">0%</div>
+    </div>
+  </div>
+
+  <!-- БОСС ДНЯ (выделен) -->
+  <a href="exercises/boss.html" class="boss-banner reveal" id="bossBanner">
+    <div class="boss-banner-content">
+      <span class="boss-banner-emoji" id="bossEmoji">⚔️</span>
+      <div>
+        <div class="boss-banner-tag">БОСС ДНЯ</div>
+        <div class="boss-banner-title" id="bossTitle">Сразись с ежедневным вызовом</div>
+        <div class="boss-banner-sub">+100 XP · уникальный босс каждый день</div>
+      </div>
+    </div>
+    <span class="boss-banner-arrow">→</span>
+  </a>
+
+  <div id="modes">
+    <h2 style="font-size:32px;margin-bottom:24px">Выбери кнопку</h2>
+    <div class="modes-grid">
+      <a href="exercises/accelerator.html" class="mode-btn" style="--mc:var(--c-acc)">
+        <div class="m-icon">⚡</div><h3>УСКОРИТЕЛЬ</h3><p>Скорость мышления</p>
+        <div class="m-stat">Рекорд: <strong id="r-acc">0</strong></div>
+      </a>
+      <a href="exercises/expander.html" class="mode-btn" style="--mc:var(--c-exp)">
+        <div class="m-icon">🧠</div><h3>РАСШИРИТЕЛЬ</h3><p>Рабочая память</p>
+        <div class="m-stat">Рекорд: <strong id="r-exp">0</strong></div>
+      </a>
+      <a href="exercises/focus.html" class="mode-btn" style="--mc:var(--c-foc)">
+        <div class="m-icon">🎯</div><h3>ФОКУС</h3><p>Концентрация</p>
+        <div class="m-stat">Рекорд: <strong id="r-foc">0</strong> сек</div>
+      </a>
+      <a href="exercises/grip.html" class="mode-btn" style="--mc:var(--c-grp)">
+        <div class="m-icon">🔒</div><h3>ЦЕПКОСТЬ</h3><p>Долговременная память</p>
+        <div class="m-stat">Рекорд: <strong id="r-grp">0</strong>%</div>
+      </a>
+      <a href="exercises/reaction.html" class="mode-btn" style="--mc:var(--c-rxn)">
+        <div class="m-icon">💥</div><h3>РЕАКЦИЯ</h3><p>Скорость реакции</p>
+        <div class="m-stat">Рекорд: <strong id="r-rxn">0</strong> мс</div>
+      </a>
+      <a href="exercises/pattern.html" class="mode-btn" style="--mc:var(--c-pat)">
+        <div class="m-icon">🧬</div><h3>ПАТТЕРН</h3><p>Распознавание паттернов</p>
+        <div class="m-stat">Рекорд: <strong id="r-pat">0</strong> ур.</div>
+      </a>
+      <a href="exercises/mirror.html" class="mode-btn" style="--mc:#FF1493">
+        <div class="m-icon">🪞</div><h3>ЗЕРКАЛО</h3><p>Межполушарная связь</p>
+        <div class="m-stat">Рекорд: <strong id="r-mir">0</strong></div>
+      </a>
+      <a href="exercises/dual.html" class="mode-btn" style="--mc:#00CED1">
+        <div class="m-icon">🎯</div><h3>ДВОЙНАЯ ЗАДАЧА</h3><p>Деление внимания</p>
+        <div class="m-stat">Рекорд: <strong id="r-dual">0</strong></div>
+      </a>
+      <a href="exercises/nback.html" class="mode-btn" style="--mc:#9370DB">
+        <div class="m-icon">🧠</div><h3>N-BACK</h3><p>Золотой стандарт</p>
+        <div class="m-stat">Рекорд: <strong id="r-nbk">0</strong>%</div>
+      </a>
+      <a href="exercises/sort.html" class="mode-btn" style="--mc:#32CD32">
+        <div class="m-icon">📦</div><h3>СОРТИРОВКА</h3><p>Быстрая категоризация</p>
+        <div class="m-stat">Рекорд: <strong id="r-srt">0</strong></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="chart-card" id="progress">
+    <div class="chart-head">
+      <h2>📊 Прогресс</h2>
+      <div class="chart-tabs" id="chartTabs">
+        <button data-ex="accelerator" class="on">Ускоритель</button>
+        <button data-ex="expander">Расширитель</button>
+        <button data-ex="focus">Фокус</button>
+        <button data-ex="grip">Цепкость</button>
+        <button data-ex="reaction">Реакция</button>
+        <button data-ex="pattern">Паттерн</button>
+      </div>
+    </div>
+    <canvas id="chart" width="1200" height="280"></canvas>
+  </div>
+
+  <div id="ach">
+    <h2 style="font-size:32px;margin-bottom:24px">🏆 Достижения</h2>
+    <div class="achievements-grid" id="achGrid"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>Прогресс хранится в твоём браузере. <a href="auth.html" style="color:var(--c-acc)">Зарегистрируйся</a>, чтобы сохранить навсегда.</p>
+  </div>
+</footer>
+
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/api.js"></script>
+<script src="js/trainer.js"></script>
+</body>
+</html>
