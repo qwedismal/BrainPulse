@@ -1,10 +1,46 @@
+/* === DESKTOP === */
+.t-card {
+  padding: 28px 24px;
+}
+
+.step {
+  padding: 40px 28px;
+}
+
+/* === TABLET === */
 @media (max-width: 768px) {
   .t-card { padding: 24px 20px; }
   .t-quote { font-size: 14px; }
-  .t-avatar { width: 36px; height: 36px; font-size: 14px; }
+  .step { padding: 32px 24px; }
+}
+
+/* === MOBILE === */
+@media (max-width: 640px) {
+  .t-card { padding: 20px 16px; }
+  .t-quote {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .t-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+  .t-meta strong { font-size: 13px; }
+  .t-meta span { font-size: 11px; }
+  .step { padding: 24px 18px; }
+  .step::before {
+    font-size: 100px;
+    top: -20px;
+  }
+  .step-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 480px) {
-  .t-card { padding: 20px 16px; }
-  .t-quote { font-size: 13px; line-height: 1.5; }
+  .t-card { padding: 18px 14px; }
+  .step { padding: 22px 16px; }
 }

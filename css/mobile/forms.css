@@ -1,10 +1,25 @@
-@media (max-width: 768px) {
+/* === DESKTOP === */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+.acc-input,
+select,
+textarea {
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+/* === MOBILE === */
+@media (max-width: 640px) {
   input[type="text"],
   input[type="email"],
   input[type="password"],
   input[type="number"],
-  .acc-input {
-    font-size: 16px; /* предотвращает zoom на iOS */
-    padding: 14px 16px;
+  .acc-input,
+  select,
+  textarea {
+    font-size: 16px; /* iOS zoom prevention */
+    padding: 12px 14px;
   }
 }

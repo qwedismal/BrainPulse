@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
 <title>Вход — BrainPulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="css/landing.css">
 <link rel="stylesheet" href="css/mobile/forms.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -48,6 +51,7 @@
   font-size:14px;
   color:var(--text-secondary);
   transition:all .2s;
+  cursor:pointer;
 }
 .auth-tab.active{
   background:var(--text-primary);
@@ -112,6 +116,9 @@
   font-size:12px;
   line-height:1.5;
 }
+.auth-footer .accent-text{
+  color:var(--c-acc);
+}
 @media (max-width:480px){
   .auth-card{padding:32px 24px}
   .auth-card h2{font-size:24px}
@@ -119,6 +126,7 @@
 </style>
 </head>
 <body>
+
 <nav class="nav">
   <div class="container nav-inner">
     <a href="index.html" class="logo"><span class="logo-dot"></span>BrainPulse</a>
@@ -129,21 +137,21 @@
 <div class="auth-wrap">
   <div class="auth-card reveal">
     <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login">Вход</button>
-      <button class="auth-tab" data-tab="register">Регистрация</button>
+      <button type="button" class="auth-tab active" data-tab="login">Вход</button>
+      <button type="button" class="auth-tab" data-tab="register">Регистрация</button>
     </div>
     
     <div class="auth-pane" id="loginPane">
       <h2>С возвращением</h2>
       <p class="auth-sub">Войди, чтобы не потерять прогресс</p>
-      <form id="loginForm">
+      <form id="loginForm" autocomplete="on">
         <label>
           <span>Email</span>
-          <input type="email" name="email" required placeholder="you@example.com">
+          <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
         </label>
         <label>
           <span>Пароль</span>
-          <input type="password" name="password" required placeholder="••••••••" minlength="6">
+          <input type="password" name="password" required placeholder="••••••••" minlength="6" autocomplete="current-password">
         </label>
         <div class="auth-error" id="loginError"></div>
         <button type="submit" class="btn btn-primary auth-submit">Войти →</button>
@@ -153,18 +161,18 @@
     <div class="auth-pane" id="registerPane" style="display:none">
       <h2>Создать аккаунт</h2>
       <p class="auth-sub">30 секунд — и ты в игре</p>
-      <form id="registerForm">
+      <form id="registerForm" autocomplete="on">
         <label>
           <span>Имя</span>
-          <input type="text" name="name" required placeholder="Алексей" minlength="2" maxlength="20">
+          <input type="text" name="name" required placeholder="Алексей" minlength="2" maxlength="20" autocomplete="name">
         </label>
         <label>
           <span>Email</span>
-          <input type="email" name="email" required placeholder="you@example.com">
+          <input type="email" name="email" required placeholder="you@example.com" autocomplete="email">
         </label>
         <label>
           <span>Пароль</span>
-          <input type="password" name="password" required placeholder="Минимум 6 символов" minlength="6">
+          <input type="password" name="password" required placeholder="Минимум 6 символов" minlength="6" autocomplete="new-password">
         </label>
         <div class="auth-error" id="registerError"></div>
         <button type="submit" class="btn btn-primary auth-submit">Зарегистрироваться ⚡</button>
@@ -173,7 +181,7 @@
     
     <div class="auth-footer">
       Регистрируясь, ты соглашаешься не удалять аккаунт после первой тренировки 😏<br>
-      <span style="color:var(--c-acc)">Без регистрации всё работает — данные хранятся в браузере</span>
+      <span class="accent-text">Без регистрации всё работает — данные хранятся в браузере</span>
     </div>
   </div>
 </div>

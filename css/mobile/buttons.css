@@ -1,18 +1,47 @@
+/* === DESKTOP === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s;
+}
+
+/* === TABLET === */
 @media (max-width: 768px) {
   .btn {
-    padding: 16px 24px;
+    padding: 14px 22px;
+    font-size: 13px;
+  }
+  .nav-cta {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+/* === MOBILE === */
+@media (max-width: 640px) {
+  .btn {
+    padding: 14px 20px;
     font-size: 14px;
     width: 100%;
-    justify-content: center;
   }
   .nav-cta {
     width: auto;
+    padding: 8px 12px;
+    font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .btn {
-    padding: 14px 20px;
+    padding: 13px 18px;
     font-size: 13px;
   }
 }
