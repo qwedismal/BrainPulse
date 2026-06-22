@@ -1,3 +1,5 @@
+'use strict';
+
 const data = Store.load();
 Snd.enabled = data.settings.sound !== false;
 const $ = id => document.getElementById(id);
@@ -9,19 +11,19 @@ const STATE = {
   youScore: 0,
   botScore: 0,
   round: 1,
-  difficulty: 'easy', // easy / medium / hard
+  difficulty: 'easy',
   currentAnswer: 0,
-  roundTimer: null,
+  roundTimerInterval: null,
   roundTimeLeft: 0,
   acceptingInput: false
 };
 
-document.getElementById('record').textContent = data.records.duel || 0;
+document.getElementById('record').textContent = (data.records && data.records.duel) || 0;
 
 const DIFFICULTY = {
-  easy: { min: 2, max: 9, ops: ['+','-'], botCorrectChance: 0.6, roundTime: 8 },
-  medium: { min: 5, max: 25, ops: ['+','-','*'], botCorrectChance: 0.78, roundTime: 5 },
-  hard: { min: 10, max: 50, ops: ['+','-','*'], botCorrectChance: 0.9, roundTime: 3 }
+  easy: { min: 2, max: 9, ops: ['+','-'], botCorrectChance: 0.55, botMinDelay: 1200, roundTime: 8 },
+  medium: { min: 5, max: 25, ops: ['+','-','*'], botCorrectChance: 0.75, botMinDelay: 800, roundTime: 6 },
+  hard: { min: 10, max: 50, ops: ['+','-','*'], botCorrectChance: 0.88, botMinDelay: 500, roundTime: 4 }
 };
 
 function genProblem() {
@@ -35,7 +37,7 @@ function genProblem() {
   } else {
     a = Utils.rand(d.min, d.max);
     b = Utils.rand(d.min, d.max);
-    if (op === '-' && b > a) [a, b] = [b, a];
+    if (op === '-' && b > a) { const tmp = a; a = b; b = tmp; }
     ans = op === '+' ? a + b : a - b;
   }
   const opts = [ans];
@@ -43,37 +45,38 @@ function genProblem() {
     const fake = ans + Utils.rand(-7, 7);
     if (fake !== ans && !opts.includes(fake)) opts.push(fake);
   }
-  return { text: `${a} ${op} ${b}`, ans, options: Utils.shuffle(opts) };
+  return { text: a + ' ' + op + ' ' + b, ans: ans, options: Utils.shuffle(opts) };
 }
 
 function renderArena() {
-  document.getElementById('problem-area').innerHTML = `
-    <div class="duel-round-info">
-      <span>Раунд <strong style="color:var(--text-primary)">${STATE.round}</strong></span>
-      <span class="timer-val" id="roundTimer">${DIFFICULTY[STATE.difficulty].roundTime}s</span>
-    </div>
-    <div class="duel-stage">
-      <div class="duel-fighter you">
-        <div class="duel-avatar">⚡</div>
-        <div class="duel-name">Ты</div>
-        <div class="duel-score" id="youScore">${STATE.youScore}</div>
-      </div>
-      <div class="duel-vs">VS</div>
-      <div class="duel-fighter bot">
-        <div class="duel-avatar">🤖</div>
-        <div class="duel-name">Бот-${['Альфа','Бета','Гамма','Дельта'][STATE.difficulty === 'easy' ? 0 : STATE.difficulty === 'medium' ? 1 : 2]}</div>
-        <div class="duel-score" id="botScore">${STATE.botScore}</div>
-      </div>
-    </div>
-    <div class="duel-problem">
-      <div class="duel-problem-text" id="problemText">+ ?</div>
-      <div class="duel-choices" id="choices"></div>
-    </div>
-    <div class="duel-status">Реши быстрее бота! Первый правильный ответ получает очко.</div>`;
+  const d = DIFFICULTY[STATE.difficulty];
+  document.getElementById('problem-area').innerHTML = 
+    '<div class="duel-round-info">' +
+      '<span>Раунд <strong style="color:var(--text-primary)">' + STATE.round + '</strong></span>' +
+      '<span class="timer-val" id="roundTimer">' + d.roundTime + 's</span>' +
+    '</div>' +
+    '<div class="duel-stage">' +
+      '<div class="duel-fighter you">' +
+        '<div class="duel-avatar">⚡</div>' +
+        '<div class="duel-name">Ты</div>' +
+        '<div class="duel-score" id="youScore">' + STATE.youScore + '</div>' +
+      '</div>' +
+      '<div class="duel-vs">VS</div>' +
+      '<div class="duel-fighter bot">' +
+        '<div class="duel-avatar">🤖</div>' +
+        '<div class="duel-name">Бот</div>' +
+        '<div class="duel-score" id="botScore">' + STATE.botScore + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="duel-problem">' +
+      '<div class="duel-problem-text" id="problemText">+ ?</div>' +
+      '<div class="duel-choices" id="choices"></div>' +
+    '</div>' +
+    '<div class="duel-status">Реши быстрее бота!</div>';
 }
 
 function startRound() {
-  STATE.roundTimer = null;
+  if (STATE.roundTimerInterval) clearInterval(STATE.roundTimerInterval);
   STATE.roundTimeLeft = DIFFICULTY[STATE.difficulty].roundTime;
   STATE.acceptingInput = true;
   
@@ -83,47 +86,54 @@ function startRound() {
   renderArena();
   document.getElementById('problemText').textContent = p.text + ' = ?';
   const choices = document.getElementById('choices');
-  choices.innerHTML = p.options.map(o => `<button class="duel-choice" data-val="${o}">${o}</button>`).join('');
-  choices.querySelectorAll('.duel-choice').forEach(c => {
-    c.addEventListener('click', () => onAnswer(parseInt(c.dataset.val), c));
-  });
+  choices.innerHTML = '';
+  for (const o of p.options) {
+    const btn = document.createElement('button');
+    btn.className = 'duel-choice';
+    btn.dataset.val = String(o);
+    btn.textContent = o;
+    btn.addEventListener('click', function() {
+      onAnswer(parseInt(this.dataset.val), this);
+    });
+    choices.appendChild(btn);
+  }
   
   // Таймер раунда
-  const rtEl = document.getElementById('roundTimer');
-  const intervalId = setInterval(() => {
+  STATE.roundTimerInterval = setInterval(() => {
     if (!STATE.running) {
-      clearInterval(intervalId);
+      clearInterval(STATE.roundTimerInterval);
       return;
     }
     STATE.roundTimeLeft--;
-    if (rtEl) rtEl.textContent = STATE.roundTimeLeft + 's';
+    const rt = document.getElementById('roundTimer');
+    if (rt) rt.textContent = STATE.roundTimeLeft + 's';
     if (STATE.roundTimeLeft <= 0) {
-      clearInterval(intervalId);
-      // Никто не ответил — очко боту
+      clearInterval(STATE.roundTimerInterval);
       if (STATE.acceptingInput) {
         STATE.botScore++;
         updateScores();
         Snd.err();
         Utils.flash('red');
+        STATE.acceptingInput = false;
         setTimeout(nextRound, 1000);
       }
     }
   }, 1000);
-  STATE.roundTimer = intervalId;
   
-  // Бот "отвечает" через случайное время
-  const botDelay = Utils.rand(800, DIFFICULTY[STATE.difficulty].roundTime * 1000);
+  // Бот отвечает через случайное время
+  const d = DIFFICULTY[STATE.difficulty];
+  const botDelay = Utils.rand(d.botMinDelay, d.roundTime * 1000);
   setTimeout(() => {
-    if (!STATE.acceptingInput) return;
-    const correct = Math.random() < DIFFICULTY[STATE.difficulty].botCorrectChance;
+    if (!STATE.acceptingInput || !STATE.running) return;
+    const correct = Math.random() < d.botCorrectChance;
     if (correct) {
       STATE.botScore++;
       updateScores();
-      Snd.beep(200, 0.3, 'sawtooth', 0.1);
+      Snd.beep(200, 0.2, 'sawtooth', 0.1);
       Utils.flash('green');
       STATE.acceptingInput = false;
-      clearInterval(intervalId);
-      setTimeout(nextRound, 1200);
+      if (STATE.roundTimerInterval) clearInterval(STATE.roundTimerInterval);
+      setTimeout(nextRound, 1000);
     }
   }, botDelay);
 }
@@ -138,7 +148,7 @@ function onAnswer(val, btn) {
     btn.style.background = 'var(--c-foc)';
     btn.style.color = '#000';
     STATE.acceptingInput = false;
-    if (STATE.roundTimer) clearInterval(STATE.roundTimer);
+    if (STATE.roundTimerInterval) clearInterval(STATE.roundTimerInterval);
     updateScores();
     setTimeout(nextRound, 1000);
   } else {
@@ -146,7 +156,7 @@ function onAnswer(val, btn) {
     Utils.flash('red');
     btn.style.background = 'var(--c-rxn)';
     btn.style.color = '#fff';
-    setTimeout(() => btn.style.background = '', 400);
+    setTimeout(() => { btn.style.background = ''; }, 400);
   }
 }
 
@@ -165,10 +175,11 @@ function nextRound() {
 
 function start() {
   if (STATE.running) return;
-  Object.assign(STATE, {
-    timer: 300, running: true,
-    youScore: 0, botScore: 0, round: 1
-  });
+  STATE.timer = 300;
+  STATE.running = true;
+  STATE.youScore = 0;
+  STATE.botScore = 0;
+  STATE.round = 1;
   document.getElementById('startBtn').disabled = true;
   document.getElementById('stopBtn').disabled = false;
   document.getElementById('difficultyBtn').disabled = true;
@@ -186,27 +197,28 @@ function start() {
 function finish() {
   STATE.running = false;
   STATE.acceptingInput = false;
-  if (STATE.roundTimer) clearInterval(STATE.roundTimer);
+  if (STATE.roundTimerInterval) clearInterval(STATE.roundTimerInterval);
   clearInterval(STATE.iv);
   Snd.end();
   
-  const score = STATE.youScore - STATE.botScore;
-  const finalScore = Math.max(0, STATE.youScore * 10 + (STATE.youScore > STATE.botScore ? 50 : 0));
+  const finalScore = STATE.youScore * 10 + (STATE.youScore > STATE.botScore ? 50 : 0);
   Store.recordResult('duel', finalScore);
-  if (window.API && API.token) API.saveResult('duel', finalScore).catch(()=>{});
+  if (window.API && API.token) {
+    API.saveResult('duel', finalScore).catch(() => {});
+  }
   
-  document.getElementById('resScore').textContent = `${STATE.youScore}:${STATE.botScore}`;
+  document.getElementById('resScore').textContent = STATE.youScore + ':' + STATE.botScore;
   
   let label, vs;
   if (STATE.youScore > STATE.botScore) {
     label = '🏆 ПОБЕДА!';
-    vs = `Ты разнёс бота <strong>${STATE.youScore}:${STATE.botScore}</strong>. Легенда!`;
+    vs = 'Ты разнёс бота <strong>' + STATE.youScore + ':' + STATE.botScore + '</strong>';
   } else if (STATE.youScore === STATE.botScore) {
     label = '🤝 НИЧЬЯ';
-    vs = `Бой был равным <strong>${STATE.youScore}:${STATE.botScore}</strong>. Реванш?`;
+    vs = 'Бой равный <strong>' + STATE.youScore + ':' + STATE.botScore + '</strong>';
   } else {
     label = '😔 ПОРАЖЕНИЕ';
-    vs = `Бот оказался сильнее <strong>${STATE.botScore}:${STATE.youScore}</strong>. Попробуй ещё раз!`;
+    vs = 'Бот сильнее <strong>' + STATE.botScore + ':' + STATE.youScore + '</strong>';
   }
   
   document.getElementById('resLabel').textContent = label;
@@ -232,13 +244,15 @@ document.getElementById('difficultyBtn').addEventListener('click', () => {
   document.getElementById('difficultyBtn').textContent = 'Сложность: ' + labels[STATE.difficulty];
 });
 
-document.getElementById('problem-area').innerHTML = `
-  <div style="text-align:center;padding:20px">
-    <div style="font-size:80px;margin-bottom:16px">⚔️</div>
-    <h2 style="font-family:var(--font-head);font-size:24px;margin-bottom:8px">Дуэль 1-на-1</h2>
-    <p style="color:var(--text-secondary);max-width:340px;margin:0 auto;font-size:14px">
-      Сразись с ботом в арифметической дуэли. Кто первый правильно ответит — получает очко.
-    </p>
-  </div>
-`;
-Utils.cursor();
+document.getElementById('problem-area').innerHTML = 
+  '<div style="text-align:center;padding:40px 20px">' +
+    '<div style="font-size:80px;margin-bottom:16px">⚔️</div>' +
+    '<h2 style="font-family:var(--font-head);font-size:24px;margin-bottom:8px;color:var(--text-primary)">Дуэль 1-на-1</h2>' +
+    '<p style="color:var(--text-secondary);max-width:340px;margin:0 auto;font-size:14px">' +
+      'Сразись с ботом в арифметике. Кто первый правильно ответит — тот получает очко.' +
+    '</p>' +
+  '</div>';
+
+if (!window.matchMedia('(hover: none)').matches) {
+  try { Utils.cursor(); } catch (e) {}
+}
